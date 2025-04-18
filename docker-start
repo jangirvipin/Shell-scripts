@@ -1,0 +1,23 @@
+#!/bin/bash
+
+git pull origin main
+
+if [ $? -ne 0 ]; then
+    echo "Failed to pull the latest changes from the repository."
+    exit 1
+fi
+
+docker-compose -f docker-compose.dev.yml up --build
+
+if [ $? -ne 0 ]; then 
+  if ! docker info > /dev/null 2>&1; then
+      echo "Docker is not running. Please start Docker and try again."
+      exit 1
+  else
+    echo "Failed to start Docker containers."
+    exit 1
+  fi
+else
+  echo "Docker containers started successfully."
+fi
+
